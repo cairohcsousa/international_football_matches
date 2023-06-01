@@ -1,0 +1,5 @@
+1 - criar o database e as três tabelas
+2 - fazer a limpeza dos dados (FALSE = 0 e TRUE =1 para usar datatype bool no SQL)
+	-> texto para colunas -> localizar e substituir
+3 - datas a partir de 1900 ficam desformatadas, é preciso levar para o formato certo
+4 - inicialmente usei o import wizard do MySQL Workbench, mas depois de perceber que demoraria muito, resolvi procurar outra forma de subir os dados pro banco de dados

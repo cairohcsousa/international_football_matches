@@ -20,8 +20,9 @@ CREATE TABLE goalscorers (
    match_date date,
    home_team varchar(100),
    away_team varchar(100),
+   scorer_team varchar(100),
    player_name varchar(100),
-   score_minute time,
+   score_minute int,
    own_goal bool,
    penalty bool
 );
@@ -43,13 +44,19 @@ LOAD DATA
     IGNORE 1 LINES
     (match_date, home_team, away_team, home_score, away_score, tournament, city, country, neutral_venue);
 
+SELECT * FROM results
+LIMIT 5;
+
 LOAD DATA
   LOCAL INFILE 'C:\\Users\\Cairo\\Documents\\BI Projects\\International Football Matches\\goalscorers.csv'
   INTO TABLE goalscorers
   FIELDS TERMINATED BY ';'
   LINES TERMINATED BY '\n'
   IGNORE 1 LINES
-  (match_date, home_team, away_team, player_name, score_minute, own_goal, penalty);
+  (match_date, home_team, away_team, scorer_team, player_name, score_minute, own_goal, penalty);
+  
+SELECT * FROM goalscorers
+LIMIT 5;
   
 LOAD DATA
   LOCAL INFILE 'C:\\Users\\Cairo\\Documents\\BI Projects\\International Football Matches\\shootouts.csv'
@@ -58,6 +65,9 @@ LOAD DATA
   LINES TERMINATED BY '\n'
   IGNORE 1 LINES
   (match_date, home_team, away_team, winner);
+
+SELECT * FROM shootouts
+LIMIT 5;
 
 # How many matches were played
 SELECT COUNT(*) FROM results;
@@ -82,9 +92,23 @@ SELECT
             results
         WHERE
             (home_score = away_score)) AS draws;
-        
-        
-###################################################### Em construção ######################################################
+
+# Greatest scorer of all time
+SELECT COUNT(*), player_name, scorer_team
+FROM goalscorers
+GROUP BY player_name
+ORDER BY COUNT(*) DESC;
+
+# Goals scored by Brazilian players only
+SELECT * FROM goalscorers
+WHERE scorer_team LIKE('Brazil')
+ORDER BY match_date DESC, score_minute DESC;
+
+# Goals scored by Neymar alone
+SELECT * FROM goalscorers
+WHERE player_name LIKE('%Neymar%');
+
+###################################################### Work in progress ######################################################
 # TODO: Percentual de jogos ganhos em casa e fora de casa, antes e depois de 1980
 SET @home_team_wins_before1980 = (SELECT COUNT(*) FROM results WHERE (home_score > away_score) AND match_date < '1980-01-01'); # setando variável
 
